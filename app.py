@@ -12,6 +12,20 @@ from datetime import timedelta
 # Setup logging
 logging.basicConfig(level=logging.DEBUG)
 
+def convert_numpy_types(obj):
+    """Convert numpy types to native Python types for JSON serialization"""
+    if isinstance(obj, np.integer):
+        return int(obj)
+    elif isinstance(obj, np.floating):
+        return float(obj)
+    elif isinstance(obj, np.ndarray):
+        return obj.tolist()
+    elif isinstance(obj, dict):
+        return {key: convert_numpy_types(value) for key, value in obj.items()}
+    elif isinstance(obj, list):
+        return [convert_numpy_types(item) for item in obj]
+    return obj
+
 app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", "track_lytix_secret_key")
 
@@ -231,7 +245,7 @@ def analyze_gear_strategy(telemetry):
         gear_changes = np.sum(np.diff(gear_data) != 0)
         
         return {
-            'gear_usage': gear_usage,
+            'gear_usage': {k: int(v) for k, v in gear_usage.items()},
             'most_used_gear': int(most_used_gear.split('_')[1]),
             'gear_changes': int(gear_changes),
             'max_gear': int(np.max(gear_data))
@@ -378,17 +392,17 @@ def process_telemetry_data(year, grand_prix, session_name, selected_drivers):
                     gap_to_leader = None
 
                 advanced_metrics[driver] = {
-                    'session_best': session_best.total_seconds() if pd.notna(session_best) else None,
-                    'theoretical_best': theoretical_best.total_seconds() if theoretical_best else None,
-                    'best_sectors': [s.total_seconds() if s and pd.notna(s) else None for s in best_sectors],
-                    'consistency_score': consistency_score,
-                    'std_dev': std_dev,
+                    'session_best': float(session_best.total_seconds()) if pd.notna(session_best) else None,
+                    'theoretical_best': float(theoretical_best.total_seconds()) if theoretical_best else None,
+                    'best_sectors': [float(s.total_seconds()) if s and pd.notna(s) else None for s in best_sectors],
+                    'consistency_score': float(consistency_score),
+                    'std_dev': float(std_dev),
                     'max_speed': float(np.max(speed_new)),
                     'gear_strategy': gear_strategy,
-                    'strongest_sector': strongest_sector,
-                    'sector_advantage': sector_advantage,
+                    'strongest_sector': str(strongest_sector) if strongest_sector else None,
+                    'sector_advantage': float(sector_advantage) if sector_advantage else 0.0,
                     'grid_position': int(grid_position) if grid_position and not pd.isna(grid_position) else None,
-                    'gap_to_leader': gap_to_leader
+                    'gap_to_leader': float(gap_to_leader) if gap_to_leader is not None else None
                 }
 
                 # Lap by lap data for race sessions
@@ -398,12 +412,12 @@ def process_telemetry_data(year, grand_prix, session_name, selected_drivers):
                         if pd.notna(lap['LapTime']):
                             lap_info = {
                                 'lap_number': int(lap['LapNumber']),
-                                'lap_time': lap['LapTime'].total_seconds(),
-                                'sector_1': lap['Sector1Time'].total_seconds() if pd.notna(lap['Sector1Time']) else None,
-                                'sector_2': lap['Sector2Time'].total_seconds() if pd.notna(lap['Sector2Time']) else None,
-                                'sector_3': lap['Sector3Time'].total_seconds() if pd.notna(lap['Sector3Time']) else None,
-                                'compound': lap.get('Compound', 'Unknown'),
-                                'tyre_life': lap.get('TyreLife', 0)
+                                'lap_time': float(lap['LapTime'].total_seconds()),
+                                'sector_1': float(lap['Sector1Time'].total_seconds()) if pd.notna(lap['Sector1Time']) else None,
+                                'sector_2': float(lap['Sector2Time'].total_seconds()) if pd.notna(lap['Sector2Time']) else None,
+                                'sector_3': float(lap['Sector3Time'].total_seconds()) if pd.notna(lap['Sector3Time']) else None,
+                                'compound': str(lap.get('Compound', 'Unknown')),
+                                'tyre_life': int(lap.get('TyreLife', 0))
                             }
                             lap_data.append(lap_info)
                     lap_by_lap_data[driver] = lap_data
@@ -480,7 +494,7 @@ def process_telemetry_data(year, grand_prix, session_name, selected_drivers):
                 lap_time_str = "N/A"
             lap_times[driver] = lap_time_str
 
-        return {
+        result = {
             'telemetry': all_telemetry,
             'fastest_minisectors': fastest_minisectors,
             'lap_times': lap_times,
@@ -490,6 +504,9 @@ def process_telemetry_data(year, grand_prix, session_name, selected_drivers):
             'advanced_metrics': advanced_metrics,
             'lap_by_lap_data': lap_by_lap_data
         }
+        
+        # Convert all numpy types to native Python types for JSON serialization
+        return convert_numpy_types(result)
 
     except Exception as e:
         logging.error(f"Error processing telemetry data: {e}")
