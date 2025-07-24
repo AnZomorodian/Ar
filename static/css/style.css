@@ -1,0 +1,677 @@
+/* Track.lytix - Modern F1 Analytics Dashboard Styles */
+
+:root {
+    --primary-color: #00ff88;
+    --primary-dark: #00cc6a;
+    --background-dark: #0a0a0a;
+    --surface-dark: #1a1a1a;
+    --surface-light: #2a2a2a;
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --text-muted: #888888;
+    --border-color: #333333;
+    --danger-color: #ff453a;
+    --warning-color: #ff9500;
+    --info-color: #007aff;
+    --success-color: var(--primary-color);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--background-dark);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Header Section */
+.header-section {
+    background: linear-gradient(135deg, var(--surface-dark) 0%, var(--surface-light) 100%);
+    border-bottom: 2px solid var(--primary-color);
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+}
+
+.brand-title {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    text-shadow: 0 0 30px rgba(0, 255, 136, 0.4);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+}
+
+.brand-title i {
+    margin-right: 0.5rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.brand-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    font-weight: 300;
+    margin: 0;
+}
+
+.header-stats {
+    display: flex;
+    gap: 2rem;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Controls Section */
+.controls-section {
+    margin-bottom: 2rem;
+}
+
+.controls-card, .drivers-card, .dashboard-card {
+    background: rgba(26, 26, 26, 0.95);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.controls-card:hover, .drivers-card:hover, .dashboard-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 8px 32px rgba(0, 255, 136, 0.1);
+}
+
+.card-header {
+    background: var(--surface-dark);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.5rem;
+    display: flex;
+    justify-content: between;
+    align-items: center;
+}
+
+.card-header h3, .card-header h4 {
+    color: var(--primary-color);
+    font-weight: 600;
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.card-header i {
+    margin-right: 0.5rem;
+}
+
+.selection-counter {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Form Controls */
+.form-label {
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+}
+
+.form-select, .form-control {
+    background: var(--surface-light);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-primary);
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-select:focus, .form-control:focus {
+    background: var(--surface-light);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(0, 255, 136, 0.25);
+    color: var(--text-primary);
+}
+
+.form-select:disabled, .form-control:disabled {
+    background: var(--surface-dark);
+    color: var(--text-muted);
+    border-color: var(--border-color);
+}
+
+/* Buttons */
+.btn {
+    border-radius: 8px;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    border: none;
+    color: var(--background-dark);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 255, 136, 0.3);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    border: none;
+    color: var(--background-dark);
+    font-size: 1.1rem;
+    padding: 1rem 2rem;
+}
+
+.btn-outline-light {
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+.btn-outline-light:hover {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--background-dark);
+}
+
+.btn:disabled {
+    background: var(--surface-light);
+    color: var(--text-muted);
+    border-color: var(--border-color);
+    transform: none;
+    box-shadow: none;
+}
+
+/* Drivers Grid */
+.drivers-card {
+    margin-top: 1.5rem;
+}
+
+.drivers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.driver-card {
+    background: var(--surface-light);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.driver-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.driver-card:hover::before {
+    left: 100%;
+}
+
+.driver-card:hover {
+    border-color: var(--primary-color);
+    background: rgba(0, 255, 136, 0.05);
+    transform: translateY(-2px);
+}
+
+.driver-card.selected {
+    border-color: var(--primary-color);
+    background: rgba(0, 255, 136, 0.1);
+    color: var(--primary-color);
+    box-shadow: 0 4px 20px rgba(0, 255, 136, 0.2);
+}
+
+.driver-code {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.driver-team {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* Dashboard Section */
+.dashboard-section {
+    padding-top: 2rem;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.dashboard-header h2 {
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 2rem;
+}
+
+.session-info {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.badge {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: 20px;
+}
+
+/* Track Visualization */
+.track-card {
+    position: relative;
+}
+
+.track-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.track-canvas-container {
+    background: var(--background-dark);
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 600px;
+    position: relative;
+}
+
+#trackCanvas {
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--background-dark);
+    transition: all 0.3s ease;
+}
+
+#trackCanvas:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+}
+
+/* Enhanced Metrics Cards */
+.metrics-card {
+    max-height: 700px;
+    overflow-y: auto;
+}
+
+.metrics-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.driver-metrics {
+    background: var(--surface-dark);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.driver-metrics:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 20px rgba(0, 255, 136, 0.1);
+}
+
+.driver-header h5 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.metric-item {
+    background: var(--surface-light);
+    border-radius: 8px;
+    padding: 1rem;
+    border-left: 4px solid var(--primary-color);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.metric-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.05), transparent);
+    transition: left 0.5s ease;
+}
+
+.metric-item:hover::before {
+    left: 100%;
+}
+
+.metric-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 255, 136, 0.2);
+}
+
+.metric-icon {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    min-width: 2rem;
+    text-align: center;
+}
+
+.metric-content {
+    flex: 1;
+}
+
+.metric-title {
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.8rem;
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.metric-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+    line-height: 1.2;
+}
+
+.metric-subtitle {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.sector-time {
+    background: var(--surface-dark);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 0.7rem;
+}
+
+/* Metric-specific styling */
+.metric-item.session-best {
+    border-left-color: #ffd700;
+}
+
+.metric-item.session-best .metric-icon {
+    color: #ffd700;
+}
+
+.metric-item.theoretical-best {
+    border-left-color: #00bfff;
+}
+
+.metric-item.theoretical-best .metric-icon {
+    color: #00bfff;
+}
+
+.metric-item.consistency {
+    border-left-color: var(--primary-color);
+}
+
+.metric-item.max-speed {
+    border-left-color: #ff6b35;
+}
+
+.metric-item.max-speed .metric-icon {
+    color: #ff6b35;
+}
+
+.metric-item.gear-strategy {
+    border-left-color: #8a2be2;
+}
+
+.metric-item.gear-strategy .metric-icon {
+    color: #8a2be2;
+}
+
+.metric-item.strongest-sector {
+    border-left-color: #32cd32;
+}
+
+.metric-item.strongest-sector .metric-icon {
+    color: #32cd32;
+}
+
+.metric-item.grid-position {
+    border-left-color: #ff4500;
+}
+
+.metric-item.grid-position .metric-icon {
+    color: #ff4500;
+}
+
+.metric-item.gap-leader {
+    border-left-color: #dc143c;
+}
+
+.metric-item.gap-leader .metric-icon {
+    color: #dc143c;
+}
+
+.metric-toggle {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.metrics-loading {
+    color: var(--text-muted);
+}
+
+/* Driver Legend */
+.driver-legend {
+    background: var(--surface-dark);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--surface-light);
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+}
+
+.legend-color {
+    width: 20px;
+    height: 4px;
+    border-radius: 2px;
+}
+
+.legend-driver {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Loading States */
+.loading-section {
+    padding: 4rem 0;
+    text-align: center;
+}
+
+.loading-section h3 {
+    color: var(--primary-color);
+    margin-top: 1rem;
+}
+
+.loading-section p {
+    color: var(--text-secondary);
+}
+
+.spinner-border-primary {
+    color: var(--primary-color);
+}
+
+/* Alert Styles */
+.alert {
+    border-radius: 8px;
+    border: none;
+    margin: 1rem 0;
+}
+
+.alert-danger {
+    background: rgba(255, 69, 58, 0.1);
+    color: var(--danger-color);
+    border-left: 4px solid var(--danger-color);
+}
+
+/* Chart Containers */
+canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .brand-title {
+        font-size: 2rem;
+    }
+    
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .drivers-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+    
+    .header-stats {
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+    
+    .track-canvas-container {
+        min-height: 400px;
+    }
+}
+
+@media (max-width: 576px) {
+    .drivers-grid {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    }
+    
+    .btn {
+        font-size: 0.8rem;
+        padding: 0.6rem 1rem;
+    }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--surface-dark);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color);
+}
+
+/* Animation Classes */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.slide-up {
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
