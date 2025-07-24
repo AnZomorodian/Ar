@@ -1,0 +1,1095 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F1 Track Dominance Analytics</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px 0;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #00ff88;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #888;
+        }
+
+        /* Controls Section */
+        .controls-section {
+            background: rgba(20, 20, 20, 0.95);
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 1px solid #333;
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: #1a1a1a;
+            padding: 15px 25px;
+            border-bottom: 1px solid #333;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #ccc;
+        }
+
+        .controls-row {
+            display: flex;
+            gap: 15px;
+            padding: 20px 25px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 120px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group select {
+            padding: 8px 12px;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 14px;
+            min-width: 120px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group select:focus {
+            outline: none;
+            border-color: #00ff88;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+        }
+
+        .form-group select:disabled {
+            background: #1a1a1a;
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        /* Drivers Section */
+        .drivers-area {
+            padding: 20px 25px;
+            display: none;
+        }
+
+        .drivers-area.active {
+            display: block;
+        }
+
+        .drivers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .driver-card {
+            padding: 10px;
+            background: #2a2a2a;
+            border: 2px solid #444;
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .driver-card:hover {
+            border-color: #00ff88;
+            background: #333;
+        }
+
+        .driver-card.selected {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+            color: #00ff88;
+        }
+
+        .generate-btn {
+            background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+            color: #000;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
+        }
+
+        .generate-btn:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Track Visualization Section */
+        .track-section {
+            background: rgba(20, 20, 20, 0.95);
+            border-radius: 12px;
+            border: 1px solid #333;
+            overflow: hidden;
+            display: none;
+        }
+
+        .track-section.active {
+            display: block;
+        }
+
+        .track-container {
+            position: relative;
+            padding: 20px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .track-canvas-wrapper {
+            flex: 1;
+            background: #000;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 750px;
+            position: relative;
+        }
+
+        #trackCanvas {
+            border: 2px solid #333;
+            border-radius: 8px;
+            background: #000;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        #trackCanvas:hover {
+            box-shadow: 0 0 40px rgba(0, 255, 136, 0.2);
+        }
+
+        .track-info {
+            width: 350px;
+            background: #1a1a1a;
+            border-radius: 8px;
+            padding: 20px;
+            max-height: 750px;
+            overflow-y: auto;
+        }
+
+        .race-title {
+            color: #00ff88;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+        }
+
+        .telemetry-section {
+            margin-bottom: 20px;
+            background: #222;
+            border-radius: 6px;
+            padding: 12px;
+            border-left: 3px solid #00ff88;
+        }
+
+        .telemetry-section h3 {
+            color: #00ff88;
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .lap-times {
+            margin-bottom: 20px;
+        }
+
+        .lap-time-entry {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .lap-time-entry:last-child {
+            border-bottom: none;
+        }
+
+        .driver-name {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .lap-time {
+            color: #aaa;
+            font-size: 12px;
+        }
+
+        .sector-times {
+            margin-top: 5px;
+            font-size: 11px;
+            color: #888;
+        }
+
+        .telemetry-stats {
+            margin-bottom: 15px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 12px;
+        }
+
+        .stat-label {
+            color: #aaa;
+        }
+
+        .stat-value {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .legend {
+            margin-top: 20px;
+        }
+
+        .legend h3 {
+            color: #ccc;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 4px;
+            margin-right: 10px;
+            border-radius: 2px;
+        }
+
+        .legend-driver {
+            font-size: 13px;
+            color: #ccc;
+        }
+
+        .zone-legend {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #333;
+        }
+
+        .zone-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+
+        .zone-color {
+            width: 15px;
+            height: 3px;
+            margin-right: 8px;
+            border-radius: 2px;
+        }
+
+        /* Loading State */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: #00ff88;
+            font-size: 18px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #333;
+            border-top: 3px solid #00ff88;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Error Display */
+        .error {
+            display: none;
+            background: rgba(255, 69, 58, 0.1);
+            border: 1px solid #ff453a;
+            color: #ff6b6b;
+            padding: 15px 25px;
+            border-radius: 8px;
+            margin: 20px 25px;
+        }
+
+        .error.active {
+            display: block;
+        }
+
+        .selection-hint {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .controls-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .form-group {
+                min-width: auto;
+            }
+
+            .drivers-grid {
+                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            }
+
+            .track-container {
+                flex-direction: column;
+            }
+
+            .track-info {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🏎️ F1 TRACK DOMINANCE ANALYTICS</h1>
+            <p>Interactive telemetry analysis and mini-sector dominance visualization</p>
+        </div>
+
+        <!-- Controls Section -->
+        <div class="controls-section">
+            <div class="section-header">TRACK CONFIGURATION</div>
+
+            <div class="controls-row">
+                <div class="form-group">
+                    <label for="year">SEASON</label>
+                    <select id="year">
+                        <option value="">Select Year...</option>
+                        {% for year in years %}
+                        <option value="{{ year }}">{{ year }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="grand-prix">GRAND PRIX</label>
+                    <select id="grand-prix" disabled>
+                        <option value="">Select GP...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="session">SESSION</label>
+                    <select id="session" disabled>
+                        <option value="">Select Session...</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="drivers-area" id="drivers-area">
+                <div class="selection-hint" id="drivers-hint">Select at least 2 drivers for comparison</div>
+                <div class="drivers-grid" id="drivers-grid"></div>
+                <button class="generate-btn" id="generate-plot" disabled>
+                    Generate Track Dominance Map
+                </button>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                Processing telemetry data...
+            </div>
+
+            <div class="error" id="error"></div>
+        </div>
+
+        <!-- Track Visualization Section -->
+        <div class="track-section" id="track-section">
+            <div class="section-header">TRACK DOMINANCE MAP</div>
+            
+            <div class="track-container">
+                <div class="track-canvas-wrapper">
+                    <canvas id="trackCanvas" width="1000" height="750"></canvas>
+                </div>
+                
+                <div class="track-info">
+                    <div class="race-title" id="race-title">Track Analysis</div>
+                    
+                    <div class="telemetry-section lap-times">
+                        <h3>🏁 Fastest Lap Times</h3>
+                        <div id="lap-times-list"></div>
+                    </div>
+                    
+                    <div class="telemetry-section" id="telemetry-stats">
+                        <h3>📊 Advanced Telemetry</h3>
+                        <div id="stats-list"></div>
+                    </div>
+                    
+                    <div class="telemetry-section">
+                        <h3>⚡ Performance Comparison</h3>
+                        <div id="performance-comparison"></div>
+                    </div>
+                    
+                    <div class="telemetry-section">
+                        <h3>🎯 Dominance Analysis</h3>
+                        <div id="dominance-analysis"></div>
+                    </div>
+                    
+                    <div class="telemetry-section legend">
+                        <h3>🏎️ Driver Legend</h3>
+                        <div id="legend-list"></div>
+                        
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class F1TrackAnalytics {
+            constructor() {
+                this.initializeElements();
+                this.bindEvents();
+                this.selectedDrivers = new Set();
+                this.availableDrivers = [];
+                this.canvas = document.getElementById('trackCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.trackData = null;
+                this.grandPrixCalendar = {{ grand_prix_calendar | tojson }};
+            }
+
+            initializeElements() {
+                this.yearSelect = document.getElementById('year');
+                this.grandPrixSelect = document.getElementById('grand-prix');
+                this.sessionSelect = document.getElementById('session');
+                this.driversArea = document.getElementById('drivers-area');
+                this.driversGrid = document.getElementById('drivers-grid');
+                this.driversHint = document.getElementById('drivers-hint');
+                this.generateBtn = document.getElementById('generate-plot');
+                this.trackSection = document.getElementById('track-section');
+                this.loading = document.getElementById('loading');
+                this.error = document.getElementById('error');
+                this.raceTitle = document.getElementById('race-title');
+                this.lapTimesList = document.getElementById('lap-times-list');
+                this.legendList = document.getElementById('legend-list');
+            }
+
+            bindEvents() {
+                this.yearSelect.addEventListener('change', () => this.onYearChange());
+                this.grandPrixSelect.addEventListener('change', () => this.onGrandPrixChange());
+                this.sessionSelect.addEventListener('change', () => this.onSessionChange());
+                this.generateBtn.addEventListener('click', () => this.generateTrackMap());
+            }
+
+            onYearChange() {
+                const selectedYear = parseInt(this.yearSelect.value);
+                this.grandPrixSelect.disabled = !selectedYear;
+                this.sessionSelect.disabled = true;
+                
+                // Populate Grand Prix options based on year
+                this.grandPrixSelect.innerHTML = '<option value="">Select GP...</option>';
+                if (selectedYear && this.grandPrixCalendar[selectedYear]) {
+                    this.grandPrixCalendar[selectedYear].forEach(gp => {
+                        const option = document.createElement('option');
+                        option.value = gp;
+                        option.textContent = gp.replace(' Grand Prix', '');
+                        this.grandPrixSelect.appendChild(option);
+                    });
+                }
+                
+                this.resetSelections(false);
+            }
+
+            async onGrandPrixChange() {
+                const grandPrixSelected = this.grandPrixSelect.value;
+                this.sessionSelect.disabled = !grandPrixSelected;
+                
+                if (grandPrixSelected) {
+                    await this.loadAvailableSessions();
+                } else {
+                    this.resetSelections(false, false);
+                }
+            }
+
+            async loadAvailableSessions() {
+                this.showLoading(true);
+                this.hideError();
+
+                try {
+                    const response = await fetch('/get_available_sessions', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            year: this.yearSelect.value,
+                            grand_prix: this.grandPrixSelect.value
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        this.sessionSelect.innerHTML = '<option value="">Select Session...</option>';
+                        data.sessions.forEach(session => {
+                            const option = document.createElement('option');
+                            option.value = session;
+                            option.textContent = session;
+                            this.sessionSelect.appendChild(option);
+                        });
+                        this.sessionSelect.disabled = false;
+                    } else {
+                        this.showError(data.error || 'Failed to load sessions');
+                    }
+                } catch (error) {
+                    this.showError('Network error: ' + error.message);
+                } finally {
+                    this.showLoading(false);
+                }
+            }
+
+            onSessionChange() {
+                const sessionSelected = this.sessionSelect.value;
+                if (sessionSelected) {
+                    this.loadDrivers();
+                } else {
+                    this.resetSelections(false, false, false);
+                }
+            }
+
+            resetSelections(resetGP = true, resetSession = true, resetDrivers = true) {
+                if (resetGP) this.grandPrixSelect.value = '';
+                if (resetSession) this.sessionSelect.value = '';
+                if (resetDrivers) {
+                    this.driversArea.classList.remove('active');
+                    this.selectedDrivers.clear();
+                }
+                this.trackSection.classList.remove('active');
+                this.updateGenerateButton();
+            }
+
+            async loadDrivers() {
+                this.showLoading(true);
+                this.hideError();
+
+                try {
+                    const response = await fetch('/get_drivers', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            year: this.yearSelect.value,
+                            grand_prix: this.grandPrixSelect.value,
+                            session: this.sessionSelect.value
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        this.availableDrivers = data.drivers;
+                        this.driversArea.classList.add('active');
+                        this.populateDriversGrid();
+                    } else {
+                        this.showError(data.error || 'Failed to load drivers');
+                    }
+                } catch (error) {
+                    this.showError('Network error: ' + error.message);
+                } finally {
+                    this.showLoading(false);
+                }
+            }
+
+            populateDriversGrid() {
+                this.driversGrid.innerHTML = '';
+                this.selectedDrivers.clear();
+
+                this.availableDrivers.forEach(driver => {
+                    const driverCard = document.createElement('div');
+                    driverCard.className = 'driver-card';
+                    driverCard.textContent = driver;
+                    driverCard.dataset.driver = driver;
+
+                    driverCard.addEventListener('click', () => {
+                        if (this.selectedDrivers.has(driver)) {
+                            this.selectedDrivers.delete(driver);
+                            driverCard.classList.remove('selected');
+                        } else {
+                            this.selectedDrivers.add(driver);
+                            driverCard.classList.add('selected');
+                        }
+                        this.updateGenerateButton();
+                        this.updateDriversHint();
+                    });
+
+                    this.driversGrid.appendChild(driverCard);
+                });
+
+                this.updateGenerateButton();
+                this.updateDriversHint();
+            }
+
+            updateDriversHint() {
+                if (this.selectedDrivers.size === 0) {
+                    this.driversHint.textContent = 'Select at least 2 drivers for comparison';
+                } else if (this.selectedDrivers.size === 1) {
+                    this.driversHint.textContent = 'Select one more driver for comparison';
+                } else {
+                    this.driversHint.textContent = `${this.selectedDrivers.size} drivers selected - Ready to generate!`;
+                }
+            }
+
+            updateGenerateButton() {
+                this.generateBtn.disabled = this.selectedDrivers.size < 2;
+            }
+
+            async generateTrackMap() {
+                this.showLoading(true);
+                this.hideError();
+
+                try {
+                    const response = await fetch('/generate_plot', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            year: this.yearSelect.value,
+                            grand_prix: this.grandPrixSelect.value,
+                            session: this.sessionSelect.value,
+                            drivers: Array.from(this.selectedDrivers)
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok && result.success) {
+                        this.trackData = result.data;
+                        this.renderTrackMap();
+                        this.updateTrackInfo(result.race_info);
+                        this.trackSection.classList.add('active');
+                    } else {
+                        this.showError(result.error || 'Failed to generate track map');
+                    }
+                } catch (error) {
+                    this.showError('Network error: ' + error.message);
+                } finally {
+                    this.showLoading(false);
+                }
+            }
+
+            renderTrackMap() {
+                if (!this.trackData) return;
+
+                // Clear canvas with solid black background
+                this.ctx.fillStyle = '#000000';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+                // Calculate bounds for scaling
+                let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+                
+                Object.values(this.trackData.track_outline).forEach(tel => {
+                    tel.X.forEach(x => {
+                        minX = Math.min(minX, x);
+                        maxX = Math.max(maxX, x);
+                    });
+                    tel.Y.forEach(y => {
+                        minY = Math.min(minY, y);
+                        maxY = Math.max(maxY, y);
+                    });
+                });
+
+                const padding = 80;
+                const scaleX = (this.canvas.width - 2 * padding) / (maxX - minX);
+                const scaleY = (this.canvas.height - 2 * padding) / (maxY - minY);
+                const scale = Math.min(scaleX, scaleY);
+
+                const offsetX = (this.canvas.width - (maxX - minX) * scale) / 2;
+                const offsetY = (this.canvas.height - (maxY - minY) * scale) / 2;
+
+                // Transform coordinates
+                const transform = (x, y) => [
+                    (x - minX) * scale + offsetX,
+                    (y - minY) * scale + offsetY
+                ];
+
+                const firstDriver = this.trackData.selected_drivers[0];
+                if (firstDriver && this.trackData.track_outline[firstDriver]) {
+                    const tel = this.trackData.track_outline[firstDriver];
+                    
+                    // Draw white track borders (outer edge)
+                    this.ctx.strokeStyle = '#ffffff';
+                    this.ctx.lineWidth = 16;
+                    this.ctx.lineCap = 'round';
+                    this.ctx.lineJoin = 'round';
+                    this.ctx.beginPath();
+                    
+                    for (let i = 0; i < tel.X.length; i++) {
+                        const [x, y] = transform(tel.X[i], tel.Y[i]);
+                        if (i === 0) {
+                            this.ctx.moveTo(x, y);
+                        } else {
+                            this.ctx.lineTo(x, y);
+                        }
+                    }
+                    this.ctx.stroke();
+                    
+                    // Draw dark track base (inner)
+                    this.ctx.strokeStyle = '#1a1a1a';
+                    this.ctx.lineWidth = 12;
+                    this.ctx.stroke();
+                }
+
+                // Draw fastest mini-sectors with enhanced styling
+                this.trackData.fastest_minisectors.forEach((sector, index) => {
+                    // Outer glow for better visibility
+                    this.ctx.strokeStyle = sector.color + '30';
+                    this.ctx.lineWidth = 18;
+                    this.ctx.lineCap = 'round';
+                    this.ctx.lineJoin = 'round';
+                    this.ctx.beginPath();
+                    
+                    for (let i = 0; i < sector.coords.x.length; i++) {
+                        const [x, y] = transform(sector.coords.x[i], sector.coords.y[i]);
+                        if (i === 0) {
+                            this.ctx.moveTo(x, y);
+                        } else {
+                            this.ctx.lineTo(x, y);
+                        }
+                    }
+                    this.ctx.stroke();
+                    
+                    // Middle glow
+                    this.ctx.strokeStyle = sector.color + '60';
+                    this.ctx.lineWidth = 12;
+                    this.ctx.stroke();
+                    
+                    // Core colored line showing driver dominance
+                    this.ctx.strokeStyle = sector.color;
+                    this.ctx.lineWidth = 8;
+                    this.ctx.stroke();
+                    
+                    // Inner highlight
+                    this.ctx.strokeStyle = sector.color + 'CC';
+                    this.ctx.lineWidth = 4;
+                    this.ctx.stroke();
+                });
+
+                // Draw finish line indicator
+                if (firstDriver && this.trackData.track_outline[firstDriver]) {
+                    const tel = this.trackData.track_outline[firstDriver];
+                    const [startX, startY] = transform(tel.X[0], tel.Y[0]);
+                    
+                    // Finish line glow
+                    this.ctx.beginPath();
+                    this.ctx.arc(startX, startY, 15, 0, 2 * Math.PI);
+                    this.ctx.fillStyle = '#00ff88';
+                    this.ctx.shadowColor = '#00ff88';
+                    this.ctx.shadowBlur = 20;
+                    this.ctx.fill();
+                    this.ctx.shadowBlur = 0;
+                    
+                    // Finish line center
+                    this.ctx.beginPath();
+                    this.ctx.arc(startX, startY, 8, 0, 2 * Math.PI);
+                    this.ctx.fillStyle = '#ffffff';
+                    this.ctx.fill();
+                    
+                    // Checkered pattern
+                    this.ctx.fillStyle = '#000000';
+                    this.ctx.fillRect(startX - 4, startY - 4, 4, 4);
+                    this.ctx.fillRect(startX, startY, 4, 4);
+                }
+            }
+
+            updateTrackInfo(raceInfo) {
+                // Update race title
+                this.raceTitle.textContent = `${raceInfo.grand_prix} ${raceInfo.year} - ${raceInfo.session}`;
+
+                // Update lap times with sector times
+                this.lapTimesList.innerHTML = '';
+                Object.entries(this.trackData.lap_times).forEach(([driver, lapTime]) => {
+                    const sectorTimes = this.trackData.sector_times[driver] || ['N/A', 'N/A', 'N/A'];
+                    const entry = document.createElement('div');
+                    entry.className = 'lap-time-entry';
+                    entry.innerHTML = `
+                        <div>
+                            <span class="driver-name" style="color: ${this.trackData.driver_colors[driver]}">${driver}</span>
+                            <div class="sector-times">S1: ${sectorTimes[0]} | S2: ${sectorTimes[1]} | S3: ${sectorTimes[2]}</div>
+                        </div>
+                        <span class="lap-time">${lapTime}</span>
+                    `;
+                    this.lapTimesList.appendChild(entry);
+                });
+
+                // Update telemetry stats with enhanced data
+                const statsContainer = document.getElementById('stats-list');
+                statsContainer.innerHTML = '';
+                
+                Object.entries(this.trackData.detailed_telemetry).forEach(([driver, stats]) => {
+                    const efficiency = ((stats.avg_throttle / 100) * (stats.avg_speed / stats.max_speed) * 100).toFixed(1);
+                    const aggression = ((stats.brake_points / 50) * (stats.gear_changes / 100) * 100).toFixed(1);
+                    
+                    const statsDiv = document.createElement('div');
+                    statsDiv.innerHTML = `
+                        <div style="color: ${this.trackData.driver_colors[driver]}; font-weight: bold; margin-bottom: 8px; display: flex; align-items: center;">
+                            <div style="width: 12px; height: 3px; background: ${this.trackData.driver_colors[driver]}; margin-right: 8px; border-radius: 2px;"></div>
+                            ${driver}
+                        </div>
+                        <div class="telemetry-stats">
+                            <div class="stat-row">
+                                <span class="stat-label">🏁 Max Speed:</span>
+                                <span class="stat-value">${stats.max_speed.toFixed(1)} km/h</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">⚡ Avg Speed:</span>
+                                <span class="stat-value">${stats.avg_speed.toFixed(1)} km/h</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">🚀 Max Throttle:</span>
+                                <span class="stat-value">${stats.max_throttle.toFixed(0)}%</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">🛑 Brake Points:</span>
+                                <span class="stat-value">${stats.brake_points}</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">⚙️ Gear Changes:</span>
+                                <span class="stat-value">${stats.gear_changes}</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">🔧 Max Gear:</span>
+                                <span class="stat-value">${stats.max_gear}</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">📈 Efficiency:</span>
+                                <span class="stat-value">${efficiency}%</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">🔥 Aggression:</span>
+                                <span class="stat-value">${aggression}%</span>
+                            </div>
+                        </div>
+                    `;
+                    statsDiv.style.marginBottom = '15px';
+                    statsDiv.style.paddingBottom = '10px';
+                    if (Object.keys(this.trackData.detailed_telemetry).length > 1) {
+                        statsDiv.style.borderBottom = '1px solid #333';
+                    }
+                    statsContainer.appendChild(statsDiv);
+                });
+
+                // Performance comparison
+                this.updatePerformanceComparison();
+                
+                // Dominance analysis
+                this.updateDominanceAnalysis();
+
+                // Update legend
+                this.legendList.innerHTML = '';
+                this.trackData.selected_drivers.forEach(driver => {
+                    const item = document.createElement('div');
+                    item.className = 'legend-item';
+                    item.innerHTML = `
+                        <div class="legend-color" style="background-color: ${this.trackData.driver_colors[driver]}; box-shadow: 0 0 6px ${this.trackData.driver_colors[driver]}40;"></div>
+                        <span class="legend-driver">${driver}</span>
+                    `;
+                    this.legendList.appendChild(item);
+                });
+            }
+
+            showLoading(show) {
+                this.loading.classList.toggle('active', show);
+            }
+
+            showError(message) {
+                this.error.textContent = message;
+                this.error.classList.add('active');
+            }
+
+            hideError() {
+                this.error.classList.remove('active');
+            }
+
+            updatePerformanceComparison() {
+                const performanceContainer = document.getElementById('performance-comparison');
+                performanceContainer.innerHTML = '';
+                
+                const drivers = this.trackData.selected_drivers;
+                if (drivers.length < 2) return;
+                
+                const telemetryData = this.trackData.detailed_telemetry;
+                const lapTimes = this.trackData.lap_times;
+                
+                // Find fastest driver
+                let fastestDriver = drivers[0];
+                let fastestTime = parseFloat(lapTimes[fastestDriver].replace(/[:.]/g, ''));
+                
+                drivers.forEach(driver => {
+                    const time = parseFloat(lapTimes[driver].replace(/[:.]/g, ''));
+                    if (time < fastestTime) {
+                        fastestTime = time;
+                        fastestDriver = driver;
+                    }
+                });
+                
+                drivers.forEach(driver => {
+                    const stats = telemetryData[driver];
+                    const isFastest = driver === fastestDriver;
+                    const timeDiff = parseFloat(lapTimes[driver].replace(/[:.]/g, '')) - fastestTime;
+                    
+                    const comparisonDiv = document.createElement('div');
+                    comparisonDiv.style.marginBottom = '10px';
+                    comparisonDiv.style.padding = '8px';
+                    comparisonDiv.style.background = isFastest ? 'rgba(0, 255, 136, 0.1)' : 'rgba(255, 255, 255, 0.05)';
+                    comparisonDiv.style.borderRadius = '4px';
+                    comparisonDiv.style.border = isFastest ? '1px solid #00ff88' : '1px solid #333';
+                    
+                    comparisonDiv.innerHTML = `
+                        <div style="color: ${this.trackData.driver_colors[driver]}; font-weight: bold; margin-bottom: 4px;">
+                            ${driver} ${isFastest ? '👑' : ''}
+                        </div>
+                        <div style="font-size: 11px; color: #aaa;">
+                            ${isFastest ? 'Fastest Lap' : `+${timeDiff.toFixed(3)}s`}
+                        </div>
+                        <div style="font-size: 11px; color: #ccc; margin-top: 2px;">
+                            Speed: ${stats.max_speed.toFixed(1)} km/h • Efficiency: ${((stats.avg_throttle / 100) * (stats.avg_speed / stats.max_speed) * 100).toFixed(1)}%
+                        </div>
+                    `;
+                    
+                    performanceContainer.appendChild(comparisonDiv);
+                });
+            }
+
+            updateDominanceAnalysis() {
+                const dominanceContainer = document.getElementById('dominance-analysis');
+                dominanceContainer.innerHTML = '';
+                
+                if (!this.trackData.fastest_minisectors) return;
+                
+                // Calculate dominance percentages
+                const dominanceCount = {};
+                this.trackData.selected_drivers.forEach(driver => {
+                    dominanceCount[driver] = 0;
+                });
+                
+                this.trackData.fastest_minisectors.forEach(sector => {
+                    if (dominanceCount.hasOwnProperty(sector.driver)) {
+                        dominanceCount[sector.driver]++;
+                    }
+                });
+                
+                const totalSectors = this.trackData.fastest_minisectors.length;
+                
+                // Sort by dominance
+                const sortedDrivers = Object.entries(dominanceCount)
+                    .sort(([,a], [,b]) => b - a)
+                    .map(([driver]) => driver);
+                
+                sortedDrivers.forEach((driver, index) => {
+                    const count = dominanceCount[driver];
+                    const percentage = ((count / totalSectors) * 100).toFixed(1);
+                    
+                    const dominanceDiv = document.createElement('div');
+                    dominanceDiv.style.marginBottom = '8px';
+                    
+                    dominanceDiv.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <span style="color: ${this.trackData.driver_colors[driver]}; font-weight: bold;">
+                                ${index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '•'} ${driver}
+                            </span>
+                            <span style="color: #fff; font-weight: bold;">${percentage}%</span>
+                        </div>
+                        <div style="background: #333; height: 6px; border-radius: 3px; overflow: hidden;">
+                            <div style="background: ${this.trackData.driver_colors[driver]}; height: 100%; width: ${percentage}%; transition: width 0.5s ease;"></div>
+                        </div>
+                        <div style="font-size: 10px; color: #888; margin-top: 2px;">
+                            ${count} sectors dominated
+                        </div>
+                    `;
+                    
+                    dominanceContainer.appendChild(dominanceDiv);
+                });
+            }
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new F1TrackAnalytics();
+        });
+    </script>
+</body>
+</html>
