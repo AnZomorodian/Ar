@@ -916,9 +916,44 @@ class TrackLytix {
         // Implementation for speed overlay toggle
         console.log('Speed overlay toggle - to be implemented');
     }
+
+    getDriverTeam(driver) {
+        // Map driver codes to team names
+        const driverTeams = {
+            'VER': 'Red Bull Racing',
+            'PER': 'Red Bull Racing',
+            'HAM': 'Mercedes',
+            'RUS': 'Mercedes',
+            'LEC': 'Ferrari',
+            'SAI': 'Ferrari',
+            'NOR': 'McLaren',
+            'PIA': 'McLaren',
+            'ALO': 'Aston Martin',
+            'STR': 'Aston Martin',
+            'OCO': 'Alpine',
+            'GAS': 'Alpine',
+            'TSU': 'AlphaTauri',
+            'RIC': 'AlphaTauri',
+            'ALB': 'Williams',
+            'SAR': 'Williams',
+            'MAG': 'Haas',
+            'HUL': 'Haas',
+            'BOT': 'Alfa Romeo',
+            'ZHO': 'Alfa Romeo'
+        };
+        return driverTeams[driver] || 'Unknown Team';
+    }
 }
 
 // Initialize the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    // Check if Chart.js is available
+    if (typeof Chart === 'undefined') {
+        console.error('Chart.js is not available. Please check the CDN connection.');
+        alert('Unable to load charting library. Please refresh the page.');
+        return;
+    }
+    
+    // Initialize the Track.lytix application
     new TrackLytix();
 });
