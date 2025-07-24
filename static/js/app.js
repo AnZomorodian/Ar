@@ -945,15 +945,34 @@ class TrackLytix {
     }
 }
 
-// Initialize the application when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    // Check if Chart.js is available
+// Initialize the application - this will be called by the HTML fallback system
+function initializeTrackLytix() {
+    // Final check for Chart.js availability
     if (typeof Chart === 'undefined') {
-        console.error('Chart.js is not available. Please check the CDN connection.');
-        alert('Unable to load charting library. Please refresh the page.');
+        console.error('Chart.js is still not available after fallback attempts');
+        document.getElementById('error-alert').style.display = 'block';
+        document.getElementById('error-message').textContent = 'Unable to load charting library. Please refresh the page or check your internet connection.';
         return;
     }
     
+    console.log('Initializing Track.lytix with Chart.js version:', Chart.version);
+    
     // Initialize the Track.lytix application
-    new TrackLytix();
+    try {
+        new TrackLytix();
+        console.log('Track.lytix initialized successfully');
+    } catch (error) {
+        console.error('Error initializing Track.lytix:', error);
+        document.getElementById('error-alert').style.display = 'block';
+        document.getElementById('error-message').textContent = 'Error initializing application: ' + error.message;
+    }
+}
+
+// Fallback for direct script loading (if HTML fallback system isn't used)
+document.addEventListener('DOMContentLoaded', () => {
+    // Only initialize directly if Chart is already available
+    if (typeof Chart !== 'undefined') {
+        initializeTrackLytix();
+    }
+    // Otherwise, wait for the HTML fallback system to call initializeTrackLytix()
 });

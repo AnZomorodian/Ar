@@ -30,12 +30,16 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", "track_lytix_secret_key")
 
 # Cache setup for fastf1
+cache_dir = os.path.join(os.getcwd(), 'fastf1_cache')
+os.makedirs(cache_dir, exist_ok=True)
+
 try:
-    fastf1.Cache.enable_cache('cache')
-    plotting.setup_mpl(color_scheme=None, misc_mpl_mods=False)
+    fastf1.Cache.enable_cache(cache_dir)
+    plotting.setup_mpl(color_scheme=None)
+    logging.info(f"FastF1 cache enabled at: {cache_dir}")
 except Exception as e:
     logging.warning(f"Cache setup failed: {e}")
-    plotting.setup_mpl(color_scheme=None, misc_mpl_mods=False)
+    plotting.setup_mpl(color_scheme=None)
 
 # Data constants
 years = list(range(2025, 2017, -1))
@@ -134,7 +138,7 @@ def get_driver_team(driver):
     return driver_teams.get(driver, 'Unknown')
 
 def get_available_sessions(year, grand_prix):
-    """Get available sessions for a specific Grand Prix and year"""
+    """Get available sessions for a specific Grand Prix and year with enhanced reliability"""
     try:
         available_sessions = []
         session_mapping = {
@@ -143,21 +147,35 @@ def get_available_sessions(year, grand_prix):
             'FP1': 'FP1',
             'FP2': 'FP2', 
             'FP3': 'FP3',
-            'Sprint': 'Sprint',
-            'Sprint Qualifying': 'Sprint Qualifying'
+            'Sprint': 'S',
+            'Sprint Qualifying': 'SQ'
         }
         
         for session_name, session_code in session_mapping.items():
             try:
                 session = fastf1.get_session(year, grand_prix, session_code)
-                session.load()
-                available_sessions.append(session_name)
-            except:
+                # Quick validation without full load
+                session_info = session.get_session_info()
+                if session_info is not None and len(session_info) > 0:
+                    available_sessions.append(session_name)
+                    logging.debug(f"Session {session_name} available for {grand_prix} {year}")
+            except Exception as e:
+                logging.debug(f"Session {session_name} not available: {str(e)[:100]}")
                 continue
-                
+        
+        # Ensure basic sessions are always available as fallback
+        if not available_sessions:
+            available_sessions = ['Race', 'Qualifying']
+            logging.warning(f"No sessions found for {grand_prix} {year}, using fallback")
+        
+        # Sort sessions in logical order
+        session_order = ['FP1', 'FP2', 'FP3', 'Sprint Qualifying', 'Sprint', 'Qualifying', 'Race']
+        available_sessions.sort(key=lambda x: session_order.index(x) if x in session_order else 999)
+        
         return available_sessions
-    except:
-        return []
+    except Exception as e:
+        logging.error(f"Error getting available sessions: {e}")
+        return ['Race', 'Qualifying']
 
 def interpolate_track(X, Y, num_points=2000):
     """Interpolate track coordinates for smoother visualization"""
