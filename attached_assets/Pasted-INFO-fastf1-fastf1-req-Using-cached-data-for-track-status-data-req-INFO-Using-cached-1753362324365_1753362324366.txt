@@ -1,0 +1,131 @@
+INFO:fastf1.fastf1.req:Using cached data for track_status_data
+req            INFO     Using cached data for _extended_timing_data
+INFO:fastf1.fastf1.req:Using cached data for _extended_timing_data
+req            INFO     Using cached data for timing_app_data
+INFO:fastf1.fastf1.req:Using cached data for timing_app_data
+core           INFO     Processing timing data...
+INFO:fastf1.fastf1.core:Processing timing data...
+DEBUG:requests_cache.policy.actions:Cache directives from request headers: CacheDirectives()
+DEBUG:requests_cache.policy.actions:Pre-read cache checks: Passed
+DEBUG:requests_cache.policy.actions:Post-read cache actions: CacheActions(expire_after=datetime.timedelta(seconds=43200))
+req            INFO     Using cached data for car_data
+INFO:fastf1.fastf1.req:Using cached data for car_data
+req            INFO     Using cached data for position_data
+INFO:fastf1.fastf1.req:Using cached data for position_data
+req            INFO     Using cached data for weather_data
+INFO:fastf1.fastf1.req:Using cached data for weather_data
+req            INFO     Using cached data for race_control_messages
+INFO:fastf1.fastf1.req:Using cached data for race_control_messages
+core           INFO     Finished loading data for 20 drivers: ['81', '4', '63', '1', '31', '12', '23', '87', '18', '55', '6', '30', '7', '5', '27', '22', '14', '16', '44', '10']
+INFO:fastf1.fastf1.core:Finished loading data for 20 drivers: ['81', '4', '63', '1', '31', '12', '23', '87', '18', '55', '6', '30', '7', '5', '27', '22', '14', '16', '44', '10']
+[2025-07-24 13:04:31 +0000] [2866] [CRITICAL] WORKER TIMEOUT (pid:2878)
+[2025-07-24 13:04:31 +0000] [2878] [ERROR] Error handling request /generate_analysis
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/gunicorn/workers/sync.py", line 177, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/app.py", line 599, in generate_analysis
+    result = process_telemetry_data(year, grand_prix, session, drivers)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/app.py", line 464, in process_telemetry_data
+    if mini_sectors[i] <= dist < mini_sectors[i+1]:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/gunicorn/workers/base.py", line 204, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2025-07-24 13:04:31 +0000] [2878] [INFO] Worker exiting (pid: 2878)
+[2025-07-24 13:04:32 +0000] [3073] [INFO] Booting worker with pid: 3073
+DEBUG:requests_cache.backends:Initializing backend: sqlite /home/runner/workspace/fastf1_cache/fastf1_http_cache
+DEBUG:requests_cache.backends.base:Initialized SQLiteDict with serializer: SerializerPipeline(name=pickle, n_stages=2)
+DEBUG:requests_cache.backends.sqlite:Opening connection to /home/runner/workspace/fastf1_cache/fastf1_http_cache.sqlite:responses
+DEBUG:requests_cache.backends.base:Initialized SQLiteDict with serializer: None
+DEBUG:requests_cache.backends.sqlite:Opening connection to /home/runner/workspace/fastf1_cache/fastf1_http_cache.sqlite:redirects
+INFO:root:FastF1 cache enabled at: /home/runner/workspace/fastf1_cache
+DEBUG:requests_cache.policy.actions:Cache directives from request headers: CacheDirectives()
+DEBUG:requests_cache.policy.actions:Pre-read cache checks: Passed
+DEBUG:requests_cache.policy.actions:Post-read cache actions: CacheActions(expire_after=datetime.timedelta(seconds=43200))
+core           INFO     Loading data for Chinese Grand Prix - Race [v3.6.0]
+INFO:fastf1.fastf1.core:Loading data for Chinese Grand Prix - Race [v3.6.0]
+req            INFO     Using cached data for session_info
+INFO:fastf1.fastf1.req:Using cached data for session_info
+req            INFO     Using cached data for driver_info
+INFO:fastf1.fastf1.req:Using cached data for driver_info
+DEBUG:requests_cache.policy.actions:Cache directives from request headers: CacheDirectives()
+DEBUG:requests_cache.policy.actions:Pre-read cache checks: Passed
+DEBUG:requests_cache.policy.actions:Post-read cache actions: CacheActions(expire_after=datetime.timedelta(seconds=43200))
+req            INFO     Using cached data for session_status_data
+INFO:fastf1.fastf1.req:Using cached data for session_status_data
+req            INFO     Using cached data for lap_count
+INFO:fastf1.fastf1.req:Using cached data for lap_count
+req            INFO     Using cached data for track_status_data
+INFO:fastf1.fastf1.req:Using cached data for track_status_data
+req            INFO     Using cached data for _extended_timing_data
+INFO:fastf1.fastf1.req:Using cached data for _extended_timing_data
+req            INFO     Using cached data for timing_app_data
+INFO:fastf1.fastf1.req:Using cached data for timing_app_data
+core           INFO     Processing timing data...
+INFO:fastf1.fastf1.core:Processing timing data...
+DEBUG:requests_cache.policy.actions:Cache directives from request headers: CacheDirectives()
+DEBUG:requests_cache.policy.actions:Pre-read cache checks: Passed
+DEBUG:requests_cache.policy.actions:Post-read cache actions: CacheActions(expire_after=datetime.timedelta(seconds=43200))
+req            INFO     Using cached data for car_data
+INFO:fastf1.fastf1.req:Using cached data for car_data
+req            INFO     Using cached data for position_data
+INFO:fastf1.fastf1.req:Using cached data for position_data
+req            INFO     Using cached data for weather_data
+INFO:fastf1.fastf1.req:Using cached data for weather_data
+req            INFO     Using cached data for race_control_messages
+INFO:fastf1.fastf1.req:Using cached data for race_control_messages
+core           INFO     Finished loading data for 20 drivers: ['81', '4', '63', '1', '31', '12', '23', '87', '18', '55', '6', '30', '7', '5', '27', '22', '14', '16', '44', '10']
+INFO:fastf1.fastf1.core:Finished loading data for 20 drivers: ['81', '4', '63', '1', '31', '12', '23', '87', '18', '55', '6', '30', '7', '5', '27', '22', '14', '16', '44', '10']
+DEBUG:requests_cache.policy.actions:Cache directives from request headers: CacheDirectives()
+DEBUG:requests_cache.policy.actions:Pre-read cache checks: Passed
+DEBUG:requests_cache.policy.actions:Post-read cache actions: CacheActions(expire_after=datetime.timedelta(seconds=43200))
+core           INFO     Loading data for Chinese Grand Prix - Race [v3.6.0]
+INFO:fastf1.fastf1.core:Loading data for Chinese Grand Prix - Race [v3.6.0]
+req            INFO     Using cached data for session_info
+INFO:fastf1.fastf1.req:Using cached data for session_info
+req            INFO     Using cached data for driver_info
+INFO:fastf1.fastf1.req:Using cached data for driver_info
+DEBUG:requests_cache.policy.actions:Cache directives from request headers: CacheDirectives()
+DEBUG:requests_cache.policy.actions:Pre-read cache checks: Passed
+DEBUG:requests_cache.policy.actions:Post-read cache actions: CacheActions(expire_after=datetime.timedelta(seconds=43200))
+req            INFO     Using cached data for session_status_data
+INFO:fastf1.fastf1.req:Using cached data for session_status_data
+req            INFO     Using cached data for lap_count
+INFO:fastf1.fastf1.req:Using cached data for lap_count
+req            INFO     Using cached data for track_status_data
+INFO:fastf1.fastf1.req:Using cached data for track_status_data
+req            INFO     Using cached data for _extended_timing_data
+INFO:fastf1.fastf1.req:Using cached data for _extended_timing_data
+req            INFO     Using cached data for timing_app_data
+INFO:fastf1.fastf1.req:Using cached data for timing_app_data
+core           INFO     Processing timing data...
+INFO:fastf1.fastf1.core:Processing timing data...
+DEBUG:requests_cache.policy.actions:Cache directives from request headers: CacheDirectives()
+DEBUG:requests_cache.policy.actions:Pre-read cache checks: Passed
+DEBUG:requests_cache.policy.actions:Post-read cache actions: CacheActions(expire_after=datetime.timedelta(seconds=43200))
+req            INFO     Using cached data for car_data
+INFO:fastf1.fastf1.req:Using cached data for car_data
+req            INFO     Using cached data for position_data
+INFO:fastf1.fastf1.req:Using cached data for position_data
+req            INFO     Using cached data for weather_data
+INFO:fastf1.fastf1.req:Using cached data for weather_data
+req            INFO     Using cached data for race_control_messages
+INFO:fastf1.fastf1.req:Using cached data for race_control_messages
+core           INFO     Finished loading data for 20 drivers: ['81', '4', '63', '1', '31', '12', '23', '87', '18', '55', '6', '30', '7', '5', '27', '22', '14', '16', '44', '10']
+INFO:fastf1.fastf1.core:Finished loading data for 20 drivers: ['81', '4', '63', '1', '31', '12', '23', '87', '18', '55', '6', '30', '7', '5', '27', '22', '14', '16', '44', '10']

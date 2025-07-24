@@ -5,8 +5,19 @@
 
 class SimpleChart {
     constructor(canvas, config) {
-        this.canvas = canvas;
-        this.ctx = canvas.getContext('2d');
+        // Handle both canvas element and canvas ID
+        if (typeof canvas === 'string') {
+            this.canvas = document.getElementById(canvas);
+        } else {
+            this.canvas = canvas;
+        }
+        
+        if (!this.canvas || typeof this.canvas.getContext !== 'function') {
+            console.error('Invalid canvas element provided to SimpleChart');
+            return;
+        }
+        
+        this.ctx = this.canvas.getContext('2d');
         this.config = config;
         this.data = config.data;
         this.options = config.options || {};
